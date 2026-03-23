@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0f1117;
+      --white: #ffffff;
+      --offwhite: #f7f9fc;
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --blue: #1e40af;
+      --blue-mid: #3b82f6;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--offwhite);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+
+
+    /* ── PORTFOLIO ── */
+    #portfolio { opacity: 1; }
+
+    /* Header */
+    header {
+      background: var(--black);
+      color: var(--white);
+      padding: 3.5rem 5vw 3rem;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .header-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 0.6rem;
+    }
+    .header-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+    }
+    .header-name span { color: var(--teal-light); }
+    .header-tagline {
+      margin-top: 0.75rem;
+      font-size: 1rem;
+      color: #94a3b8;
+      font-weight: 300;
+    }
+    .header-right { text-align: right; }
+    .header-contact {
+      font-size: 0.82rem;
+      color: #64748b;
+      line-height: 1.9;
+    }
+    .header-contact a { color: var(--teal-light); text-decoration: none; }
+    .header-contact a:hover { text-decoration: underline; }
+
+    .accent-bar {
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal), var(--blue-mid), transparent);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 5vw 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+
+    /* Card */
+    .video-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(13, 148, 136, 0.12), 0 4px 16px rgba(0,0,0,0.08);
+    }
+
+    /* Thumbnail — clicking opens SHORT clip */
+    .thumb-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #0f1117;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .thumb-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.85;
+      transition: opacity 0.3s, transform 0.4s ease;
+    }
+    .video-card:hover .thumb-wrap img { opacity: 1; transform: scale(1.04); }
+
+    .play-overlay {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .play-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.95);
+      border-radius: 100px;
+      padding: 0.55rem 1.1rem 0.55rem 0.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      transition: transform 0.2s, background 0.2s;
+    }
+    .video-card:hover .play-badge { transform: scale(1.08); }
+    .play-badge svg { flex-shrink: 0; }
+    .play-badge-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #0f1117;
+    }
+
+    .card-strip {
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--blue-mid));
+    }
+
+    .card-body {
+      padding: 1.25rem 1.35rem 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .card-tag {
+      font-size: 0.67rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+    }
+    .card-date {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+    .card-role {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    /* Full version button at bottom of card */
+    .card-footer {
+      padding: 0.85rem 1.35rem 1.1rem;
+      border-top: 1px solid var(--border);
+      margin-top: 0.75rem;
+    }
+    .full-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      width: 100%;
+      padding: 0.6rem 0.9rem;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      text-align: left;
+    }
+    .full-btn:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      background: rgba(13,148,136,0.04);
+    }
+    .full-btn svg { flex-shrink: 0; transition: transform 0.2s; }
+    .full-btn:hover svg { transform: scale(1.15); }
+    .full-btn-text { flex: 1; }
+    .full-btn-sub {
+      display: block;
+      font-size: 0.67rem;
+      font-weight: 400;
+      opacity: 0.7;
+      margin-top: 0.1rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Modal */
+    #modal {
+      position: fixed; inset: 0;
+      background: rgba(10,12,20,0.92);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500;
+      opacity: 0; visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      padding: 1.5rem;
+    }
+    #modal.open { opacity: 1; visibility: visible; }
+    .modal-inner { width: 100%; max-width: 920px; position: relative; }
+    .modal-label {
+      position: absolute; top: -2.75rem; left: 0;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-light);
+    }
+    .modal-close {
+      position: absolute; top: -2.75rem; right: 0;
+      background: none; border: none;
+      color: #94a3b8;
+      font-size: 0.78rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer; transition: color 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .modal-close:hover { color: white; }
+    .video-embed { aspect-ratio: 16/9; width: 100%; background: black; border-radius: 8px; overflow: hidden; }
+    .video-embed iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    footer {
+      text-align: center;
+      padding: 2rem 5vw;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-right { text-align: left; }
+    }
+    @media (min-width: 769px) and (max-width: 960px) {
+      .video-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- PORTFOLIO -->
+<div id="portfolio">
+
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <p class="header-eyebrow">Performance Portfolio</p>
+        <h1 class="header-name">[ Your Name ]</h1>
+        <p class="header-tagline">Actor &amp; Singer &nbsp;·&nbsp; [ Your High School ] &nbsp;·&nbsp; Class of 2025</p>
+      </div>
+      <div class="header-right">
+        <div class="header-contact">
+          <a href="/cdn-cgi/l/email-protection#8df4e2f8cde8e0ece4e1a3eee2e0"><span class="__cf_email__" data-cfemail="9ce5f3e9dcf9f1fdf5f0b2fff3f1">[email&#160;protected]</span></a><br>
+          [ Your City, State ]
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="accent-bar"></div>
+
+  <main>
+    <div class="section-header">
+      <span class="section-title">Selected Work</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="video-grid" id="video-grid"></div>
+  </main>
+
+  <footer>Private portfolio &mdash; please do not share this link.</footer>
+</div>
+
+<!-- MODAL -->
+<div id="modal">
+  <div class="modal-inner">
+    <span class="modal-label" id="modal-label"></span>
+    <button class="modal-close" id="modal-close">&#x2715; Close</button>
+    <div class="video-embed" id="video-embed"></div>
+  </div>
+</div>
+
+<script>
+function extractYouTubeId(url) {
+  if (!url) return null;
+  var match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([A-Za-z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+var VIDEOS = [
+  {
+    shortUrl: "https://youtu.be/Gr4UlAILuJ0",
+    fullUrl:  "https://youtu.be/Gr4UlAILuJ0",
+    title:    "Opening from the musical 13",
+    role:     "Evan Goldman",
+    date:     "January 2024",
+    tag:      "Musical Theater",
+    description: "School production."
+  },
+  {
+    shortUrl: "https://youtu.be/g8Oeij_7QNk",
+    fullUrl:  "https://youtu.be/bVhzIyxGTGQ",
+    title:    "\"Agony\" — Into the Woods",
+    role:     "",
+    date:     "October 2024",
+    tag:      "Musical Theater",
+    description: "Performed with my twin as part of a Pop Idol competition."
+  },
+  {
+    shortUrl: "https://youtu.be/IQQgLtMFBgk",
+    fullUrl:  "https://youtu.be/IQQgLtMFBgk",
+    title:    "\"Love Thy Neighbor\" — The Prom",
+    role:     "Trent",
+    date:     "October 2023",
+    tag:      "Musical Theater",
+    description: ""
+  }
+];
+
+// Build grid
+var grid = document.getElementById("video-grid");
+for (var i = 0; i < VIDEOS.length; i++) {
+  (function(v) {
+    var shortId = extractYouTubeId(v.shortUrl);
+    var fullId  = extractYouTubeId(v.fullUrl);
+    var thumb   = "https://img.youtube.com/vi/" + shortId + "/maxresdefault.jpg";
+    var fallback = "https://img.youtube.com/vi/" + shortId + "/hqdefault.jpg";
+
+    var card = document.createElement("div");
+    card.className = "video-card";
+
+    var roleHtml = v.role ? '<p class="card-role">Role: <strong>' + v.role + '</strong></p>' : '';
+    var descHtml = v.description ? '<p class="card-desc">' + v.description + '</p>' : '';
+
+    card.innerHTML =
+      '<div class="thumb-wrap">' +
+        '<img src="' + thumb + '" onerror="this.src=\'' + fallback + '\'" alt="' + v.title + '">' +
+        '<div class="play-overlay">' +
+          '<div class="play-badge">' +
+            '<svg width="14" height="16" viewBox="0 0 14 16" fill="none"><path d="M1 1L13 8L1 15V1Z" fill="#0f1117"/></svg>' +
+            '<span class="play-badge-label">Highlight</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-strip"></div>' +
+      '<div class="card-body">' +
+        '<div class="card-meta">' +
+          '<span class="card-tag">' + v.tag + '</span>' +
+          '<span class="card-date">' + v.date + '</span>' +
+        '</div>' +
+        '<h2 class="card-title">' + v.title + '</h2>' +
+        roleHtml +
+        descHtml +
+      '</div>' +
+      '<div class="card-footer">' +
+        '<button class="full-btn" data-fullid="' + fullId + '" data-title="' + v.title + '">' +
+          '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>' +
+            '<path d="M5.5 5L10.5 8L5.5 11V5Z" fill="currentColor"/>' +
+          '</svg>' +
+          '<span class="full-btn-text">Watch Full Version' +
+            '<span class="full-btn-sub">Complete performance</span>' +
+          '</span>' +
+        '</button>' +
+      '</div>';
+
+    // Thumbnail click = short clip
+    card.querySelector(".thumb-wrap").onclick = function() {
+      openModal(shortId, "Highlight Clip");
+    };
+
+    // Full version button
+    card.querySelector(".full-btn").onclick = function(e) {
+      e.stopPropagation();
+      openModal(fullId, "Full Performance");
+    };
+
+    grid.appendChild(card);
+  })(VIDEOS[i]);
+}
+
+// Modal
+var modal = document.getElementById("modal");
+var embed = document.getElementById("video-embed");
+var modalLabel = document.getElementById("modal-label");
+var closeBtn = document.getElementById("modal-close");
+
+function openModal(id, label) {
+  modalLabel.textContent = label || "";
+  embed.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+  modal.classList.add("open");
+}
+function closeModal() {
+  modal.classList.remove("open");
