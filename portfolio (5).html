@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will Pollock — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0f1117;
+      --white: #ffffff;
+      --offwhite: #f7f9fc;
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --blue-mid: #3b82f6;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--offwhite); color: var(--black); min-height: 100vh; }
+
+    /* HEADER */
+    header { background: var(--black); color: var(--white); padding: 3.5rem 5vw 3rem; }
+    .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .header-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 0.6rem; }
+    .header-name { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+    .header-tagline { margin-top: 0.75rem; font-size: 1rem; color: #94a3b8; font-weight: 300; }
+    .header-right { text-align: right; }
+    .header-contact { font-size: 0.82rem; color: #64748b; line-height: 1.9; }
+    .header-contact a { color: var(--teal-light); text-decoration: none; }
+    .header-contact a:hover { text-decoration: underline; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, var(--teal), var(--blue-mid), transparent); }
+
+    /* MAIN */
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 5vw 5rem; }
+    .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .section-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    /* GRID */
+    .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+
+    /* CARD */
+    .video-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.22s ease, box-shadow 0.22s ease; display: flex; flex-direction: column; }
+    .video-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,148,136,0.12), 0 4px 16px rgba(0,0,0,0.08); }
+
+    .thumb-wrap { position: relative; aspect-ratio: 16/9; background: #0f1117; overflow: hidden; cursor: pointer; }
+    .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.3s, transform 0.4s ease; }
+    .video-card:hover .thumb-wrap img { opacity: 1; transform: scale(1.04); }
+
+    .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .play-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.95); border-radius: 999px; padding: 0.45rem 0.9rem 0.45rem 0.6rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform 0.2s; }
+    .video-card:hover .play-badge { transform: scale(1.07); }
+    .play-badge span { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0f1117; }
+
+    .card-strip { height: 3px; background: linear-gradient(90deg, var(--teal), var(--blue-mid)); }
+    .card-body { padding: 1.1rem 1.35rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem; }
+    .card-tag { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); }
+    .card-date { font-size: 0.72rem; color: var(--muted); }
+    .card-title { font-size: 1rem; font-weight: 600; line-height: 1.35; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
+    .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; flex: 1; }
+
+    .card-footer { display: flex; justify-content: flex-end; margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .full-pill { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.75rem; transition: color 0.18s, border-color 0.18s, background 0.18s; }
+    .full-pill:hover { color: var(--teal); border-color: var(--teal-light); background: #f0fdfb; }
+    .full-pill svg { transition: transform 0.18s; }
+    .full-pill:hover svg { transform: translateX(2px); }
+
+    /* MODAL */
+    #modal { position: fixed; inset: 0; background: rgba(10,12,20,0.92); display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; padding: 1.5rem; }
+    #modal.open { opacity: 1; visibility: visible; }
+    .modal-inner { width: 100%; max-width: 920px; position: relative; }
+    .modal-close { position: absolute; top: -2.75rem; right: 0; background: none; border: none; color: #94a3b8; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: color 0.2s; font-family: 'Inter', sans-serif; }
+    .modal-close:hover { color: white; }
+    .video-embed { aspect-ratio: 16/9; width: 100%; background: black; border-radius: 8px; overflow: hidden; }
+    .video-embed iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    footer { text-align: center; padding: 2rem 5vw; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid var(--border); letter-spacing: 0.04em; }
+
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-right { text-align: left; }
+    }
+    @media (min-width: 769px) and (max-width: 960px) {
+      .video-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-left">
+      <p class="header-eyebrow">Performance Portfolio</p>
+      <h1 class="header-name">Will Pollock</h1>
+      <p class="header-tagline">Actor &amp; Singer &nbsp;&middot;&nbsp; Natick High School &nbsp;&middot;&nbsp; Class of 2026</p>
+    </div>
+    <div class="header-right">
+      <div class="header-contact">
+        <a href="mailto:willcpollock@gmail.com">willcpollock@gmail.com</a><br>
+        Natick, MA
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="accent-bar"></div>
+
+<main>
+  <div class="section-header">
+    <span class="section-title">Selected Work</span>
+    <div class="section-line"></div>
+  </div>
+  <div class="video-grid" id="video-grid"></div>
+</main>
+
+<footer>Private portfolio &mdash; please do not share this link.</footer>
+
+<div id="modal">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close">&#x2715; Close</button>
+    <div class="video-embed" id="video-embed"></div>
+  </div>
+</div>
+
+<script>
+// YouTube URL -> video ID
+function ytId(url) {
+  var m = url.match(/(?:youtu\.be\/|v=)([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+var VIDEOS = [
+  // Newest first
+  {
+    shortUrl:    "https://youtu.be/EOmSoNY_4Mk",
+    fullUrl:     "https://youtu.be/vmOS0cyRNQE",
+    tag:         "A Cappella",
+    title:       "West Street 2026",
+    desc:        "Soloist.",
+    date:        "March 2026"
+  },
+  {
+    shortUrl:    "https://youtu.be/-XarkDoAn8c",
+    fullUrl:     "https://youtu.be/ZhqTcNwY-DE",
+    tag:         "A Cappella",
+    title:       "Galway Girl",
+    desc:        "Soloist — Sound &amp; Spirit.",
+    date:        "May 2025"
+  },
+  {
+    shortUrl:    "https://youtu.be/g8Oeij_7QNk",
+    fullUrl:     "https://youtu.be/bVhzIyxGTGQ",
+    tag:         "Musical Theater",
+    title:       "\u201cAgony\u201d \u2014 Into the Woods",
+    desc:        "Performed with my twin as part of a Pop Idol competition.",
+    date:        "October 2024"
+  },
+  {
+    shortUrl:    "https://youtu.be/TyKPfE2BS4c",
+    fullUrl:     "https://youtu.be/DKdZ3WbghPk",
+    tag:         "A Cappella",
+    title:       "Magic",
+    desc:        "Soloist — Sound &amp; Spirit.",
+    date:        "May 2024"
+  },
+  {
+    shortUrl:    "https://youtu.be/Gr4UlAILuJ0",
+    fullUrl:     "https://youtu.be/Gr4UlAILuJ0",
+    tag:         "Musical Theater",
+    title:       "Opening \u2014 13",
+    desc:        "Role: Evan Goldman. School production.",
+    date:        "January 2024"
+  },
+  {
+    shortUrl:    "https://youtu.be/IQQgLtMFBgk",
+    fullUrl:     "https://youtu.be/IQQgLtMFBgk",
+    tag:         "Musical Theater",
+    title:       "\u201cLove Thy Neighbor\u201d \u2014 The Prom",
+    desc:        "Role: Trent.",
+    date:        "December 2023"
+  }
+];
+
+var grid = document.getElementById("video-grid");
+var arrowSVG = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+VIDEOS.forEach(function(v) {
+  var highlightId = ytId(v.shortUrl);
+  var fullId      = ytId(v.fullUrl);
+  var hasFullLink = highlightId !== fullId;
+
+  var thumb    = "https://img.youtube.com/vi/" + highlightId + "/maxresdefault.jpg";
+  var fallback = "https://img.youtube.com/vi/" + highlightId + "/hqdefault.jpg";
+
+  var pillHTML = hasFullLink
+    ? '<div class="card-footer">' +
+        '<a class="full-pill" href="' + v.fullUrl + '" target="_blank" rel="noopener">' +
+          'Full version ' + arrowSVG +
+        '</a>' +
+      '</div>'
+    : '';
+
+  var card = document.createElement("div");
+  card.className = "video-card";
+  card.innerHTML =
+    '<div class="thumb-wrap">' +
+      '<img src="' + thumb + '" onerror="this.src=\'' + fallback + '\'">' +
+      '<div class="play-overlay">' +
+        '<div class="play-badge">' +
+          '<svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg>' +
+          '<span>Highlights</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="card-strip"></div>' +
+    '<div class="card-body">' +
+      '<div class="card-meta">' +
+        '<span class="card-tag">' + v.tag + '</span>' +
+        '<span class="card-date">' + v.date + '</span>' +
+      '</div>' +
+      '<h2 class="card-title">' + v.title + '</h2>' +
+      '<p class="card-desc">' + v.desc + '</p>' +
+      pillHTML +
+    '</div>';
+
+  card.querySelector(".thumb-wrap").onclick = function() { openModal(highlightId); };
+  grid.appendChild(card);
+});
+
+var modal = document.getElementById("modal");
+var embed = document.getElementById("video-embed");
+document.getElementById("modal-close").onclick = closeModal;
+modal.onclick = function(e) { if (e.target === modal) closeModal(); };
+document.onkeydown = function(e) { if (e.key === "Escape") closeModal(); };
+
+function openModal(id) {
+  embed.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+  modal.classList.add("open");
+}
+function closeModal() {
+  modal.classList.remove("open");
+  embed.innerHTML = "";
+}
+</script>
+</body>
+</html>
