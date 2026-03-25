@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will Pollock — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black: #0f1117;
+      --white: #ffffff;
+      --offwhite: #f7f9fc;
+      --teal: #0d9488;
+      --teal-light: #14b8a6;
+      --blue-mid: #3b82f6;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--offwhite); color: var(--black); min-height: 100vh; }
+
+    header { background: var(--black); color: var(--white); padding: 3.5rem 5vw 3rem; }
+    .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
+    .header-eyebrow { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal-light); margin-bottom: 0.6rem; }
+    .header-name { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+    .header-tagline { margin-top: 0.75rem; font-size: 1rem; color: #94a3b8; font-weight: 300; }
+    .header-contact { font-size: 0.82rem; color: #64748b; line-height: 1.9; text-align: right; }
+    .header-contact a { color: var(--teal-light); text-decoration: none; }
+    .header-contact a:hover { text-decoration: underline; }
+    .accent-bar { height: 4px; background: linear-gradient(90deg, var(--teal), var(--blue-mid), transparent); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 3rem 5vw 5rem; }
+    .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .section-title { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    .video-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+
+    .video-card { background: var(--white); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); transition: transform 0.22s ease, box-shadow 0.22s ease; display: flex; flex-direction: column; }
+    .video-card:hover { transform: translateY(-4px); box-shadow: 0 16px 48px rgba(13,148,136,0.12), 0 4px 16px rgba(0,0,0,0.08); }
+
+    .thumb-wrap { position: relative; aspect-ratio: 16/9; background: #0f1117; overflow: hidden; cursor: pointer; }
+    .thumb-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.85; transition: opacity 0.3s, transform 0.4s ease; }
+    .video-card:hover .thumb-wrap img { opacity: 1; transform: scale(1.04); }
+    .play-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .play-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.95); border-radius: 999px; padding: 0.45rem 0.9rem 0.45rem 0.6rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3); transition: transform 0.2s; }
+    .video-card:hover .play-badge { transform: scale(1.07); }
+    .play-badge span { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0f1117; }
+
+    .card-strip { height: 3px; background: linear-gradient(90deg, var(--teal), var(--blue-mid)); }
+    .card-body { padding: 1.1rem 1.35rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+    .card-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem; }
+    .card-tag { font-size: 0.67rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); }
+    .card-date { font-size: 0.72rem; color: var(--muted); }
+    .card-title { font-size: 1rem; font-weight: 600; line-height: 1.35; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
+    .card-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.65; flex: 1; }
+
+    /* Footer row — only rendered when full-link pill exists */
+    .card-footer { display: flex; justify-content: flex-end; margin-top: 0.9rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+    .full-pill { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); text-decoration: none; border: 1px solid var(--border); border-radius: 999px; padding: 0.28rem 0.7rem; transition: color 0.18s, border-color 0.18s, background 0.18s; }
+    .full-pill:hover { color: var(--teal); border-color: var(--teal-light); background: #f0fdfb; }
+    .full-pill svg { transition: transform 0.18s; }
+    .full-pill:hover svg { transform: translateX(2px); }
+
+    #modal { position: fixed; inset: 0; background: rgba(10,12,20,0.92); display: flex; align-items: center; justify-content: center; z-index: 500; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; padding: 1.5rem; }
+    #modal.open { opacity: 1; visibility: visible; }
+    .modal-inner { width: 100%; max-width: 920px; position: relative; }
+    .modal-close { position: absolute; top: -2.75rem; right: 0; background: none; border: none; color: #94a3b8; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: color 0.2s; font-family: 'Inter', sans-serif; }
+    .modal-close:hover { color: white; }
+    .video-embed { aspect-ratio: 16/9; width: 100%; background: black; border-radius: 8px; overflow: hidden; }
+    .video-embed iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    footer { text-align: center; padding: 2rem 5vw; font-size: 0.75rem; color: #94a3b8; border-top: 1px solid var(--border); letter-spacing: 0.04em; }
+
+    @media (max-width: 768px) {
+      .video-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .header-contact { text-align: left; }
+    }
+    @media (min-width: 769px) and (max-width: 960px) {
+      .video-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <p class="header-eyebrow">Performance Portfolio</p>
+      <h1 class="header-name">Will Pollock</h1>
+      <p class="header-tagline">Actor &amp; Singer &nbsp;&middot;&nbsp; Natick High School &nbsp;&middot;&nbsp; <span style="white-space:nowrap">Class of 2026</span></p>
+    </div>
+    <div class="header-contact">
+      <a href="/cdn-cgi/l/email-protection#7f081613131c0f101313101c143f18121e1613511c1012"><span class="__cf_email__" data-cfemail="65120c090906150a09090a060e250208040c094b060a08">[email&#160;protected]</span></a><br>
+      Natick, MA
+    </div>
+  </div>
+</header>
+
+<div class="accent-bar"></div>
+
+<main>
+  <div class="section-header">
+    <span class="section-title">Selected Work</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="video-grid">
+
+    <!-- Row 2: Galway Girl — Community Choir, May 2025 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="-XarkDoAn8c">
+        <img src="https://img.youtube.com/vi/-XarkDoAn8c/maxresdefault.jpg" data-fallback="https://img.youtube.com/vi/-XarkDoAn8c/hqdefault.jpg" alt="Galway Girl">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Community Choir</span><span class="card-date">May 2025</span></div>
+        <h2 class="card-title">Galway Girl</h2>
+        <p class="card-desc">Soloist &mdash; Sound &amp; Spirit.</p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/ZhqTcNwY-DE" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: West Street 2025 — Show Choir, Mar 2025 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="5WXnJ-5HuVo">
+        <img src="https://img.youtube.com/vi/5WXnJ-5HuVo/maxresdefault.jpg"  alt="West Street 2025">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Show Choir</span><span class="card-date">March 2025</span></div>
+        <h2 class="card-title">West Street 2025</h2>
+        <p class="card-desc"></p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/QHJLSbmBvXM" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 4: Homework — Musical Theatre, Jan 2024 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="Z6BRGjBK43k">
+        <img src="https://img.youtube.com/vi/Z6BRGjBK43k/maxresdefault.jpg"  alt="Homework">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Musical Theatre</span><span class="card-date">January 2024</span></div>
+        <h2 class="card-title">Homework</h2>
+        <p class="card-desc"></p>
+      </div>
+    </div>
+
+    <!-- Row 5: Agony — Performance, Oct 2024 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="g8Oeij_7QNk">
+        <img src="https://img.youtube.com/vi/g8Oeij_7QNk/maxresdefault.jpg"  alt="Agony — Into the Woods">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Performance</span><span class="card-date">October 2024</span></div>
+        <h2 class="card-title">&ldquo;Agony&rdquo; &mdash; <em>Into the Woods</em></h2>
+        <p class="card-desc">Performed with my twin as part of a Pop Idol competition.</p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/bVhzIyxGTGQ" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 6: Love Thy Neighbor — Musical Theatre, no date -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="MgDiN4rH6hM">
+        <img src="https://img.youtube.com/vi/MgDiN4rH6hM/maxresdefault.jpg"  alt="Love Thy Neighbor — The Prom">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Musical Theatre</span><span class="card-date"></span></div>
+        <h2 class="card-title">&ldquo;Love Thy Neighbor&rdquo; &mdash; <em>The Prom</em></h2>
+        <p class="card-desc">Role: Trent.</p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/IQQgLtMFBgk" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 7: Magic — Community Choir, May 2024 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="TyKPfE2BS4c">
+        <img src="https://img.youtube.com/vi/TyKPfE2BS4c/maxresdefault.jpg"  alt="Magic">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Community Choir</span><span class="card-date">May 2024</span></div>
+        <h2 class="card-title">Magic</h2>
+        <p class="card-desc">Soloist &mdash; Sound &amp; Spirit.</p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/DKdZ3WbghPk" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 8: Opening — 13 — Musical Theatre, Jan 2024 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="Gr4UlAILuJ0">
+        <img src="https://img.youtube.com/vi/Gr4UlAILuJ0/maxresdefault.jpg"  alt="Opening — 13">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Musical Theatre</span><span class="card-date">January 2024</span></div>
+        <h2 class="card-title">Opening &mdash; <em>13</em></h2>
+        <p class="card-desc">Role: Evan Goldman. School production.</p>
+      </div>
+    </div>
+
+    <!-- Row 9: West Street 2026 — Show Choir, Mar 2026 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="EOmSoNY_4Mk">
+        <img src="https://img.youtube.com/vi/EOmSoNY_4Mk/maxresdefault.jpg"  alt="West Street 2026">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Show Choir</span><span class="card-date">March 2026</span></div>
+        <h2 class="card-title">West Street 2026</h2>
+        <p class="card-desc">Soloist.</p>
+        <div class="card-footer">
+          <a class="full-pill" href="https://youtu.be/vmOS0cyRNQE" target="_blank" rel="noopener">Full version <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5H10M10 5.5L6.5 2M10 5.5L6.5 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 10: Audition — Performance, Dec 2023 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="NiQtA2__PAg">
+        <img src="https://img.youtube.com/vi/NiQtA2__PAg/maxresdefault.jpg"  alt="Audition">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Performance</span><span class="card-date">December 2023</span></div>
+        <h2 class="card-title">Audition</h2>
+        <p class="card-desc"></p>
+      </div>
+    </div>
+
+    <!-- Row 11: Being a Geek — Musical Theatre, Jan 2024 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="x9ygMax_3ZU">
+        <img src="https://img.youtube.com/vi/x9ygMax_3ZU/maxresdefault.jpg"  alt="Being a Geek">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Musical Theatre</span><span class="card-date">January 2024</span></div>
+        <h2 class="card-title">Being a Geek</h2>
+        <p class="card-desc">Role: Evan Goldman.</p>
+      </div>
+    </div>
+
+    <!-- Row 12: Wedding Song — Performance, Jun 2022 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="rdkQ4IkB33k">
+        <img src="https://img.youtube.com/vi/rdkQ4IkB33k/maxresdefault.jpg" alt="Wedding Song">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Performance</span><span class="card-date">June 2022</span></div>
+        <h2 class="card-title">Wedding Song</h2>
+        <p class="card-desc"></p>
+      </div>
+    </div>
+
+    <!-- Row 13: Dear Theodosia — Performance, Jun 2018 -->
+    <div class="video-card">
+      <div class="thumb-wrap" data-video-id="rhNzotTbwvM">
+        <img src="https://img.youtube.com/vi/rhNzotTbwvM/maxresdefault.jpg" alt="Dear Theodosia">
+        <div class="play-overlay"><div class="play-badge"><svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M1 1.5L12 7.5L1 13.5V1.5Z" fill="#0f1117"/></svg><span>Play</span></div></div>
+      </div>
+      <div class="card-strip"></div>
+      <div class="card-body">
+        <div class="card-meta"><span class="card-tag">Performance</span><span class="card-date">June 2018</span></div>
+        <h2 class="card-title">Dear Theodosia</h2>
+        <p class="card-desc"></p>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>Private portfolio &mdash; please do not share this link.</footer>
+
+<div id="modal">
+  <div class="modal-inner">
+    <button class="modal-close" id="modal-close">&#x2715; Close</button>
+    <div class="video-embed" id="video-embed"></div>
+  </div>
+</div>
+
+<script>
+var modal = document.getElementById("modal");
+var embed = document.getElementById("video-embed");
+
+// Wire up thumbnail clicks via data-video-id (avoids inline JS quoting issues)
+document.querySelectorAll(".thumb-wrap[data-video-id]").forEach(function(wrap) {
+  var id = wrap.getAttribute("data-video-id");
+  // Fallback image handling
+  var img = wrap.querySelector("img");
+  if (img) {
+    img.addEventListener("error", function() {
+      this.src = "https://img.youtube.com/vi/" + id + "/hqdefault.jpg";
+    });
+  }
+  wrap.addEventListener("click", function() { openModal(id); });
+});
+
+document.getElementById("modal-close").onclick = closeModal;
+modal.onclick = function(e) { if (e.target === modal) closeModal(); };
+document.onkeydown = function(e) { if (e.key === "Escape") closeModal(); };
+function openModal(id) {
+  embed.innerHTML = '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" allow="autoplay; fullscreen" allowfullscreen></iframe>';
+  modal.classList.add("open");
+}
+function closeModal() {
+  modal.classList.remove("open");
+  embed.innerHTML = "";
+}
+</script>
+</body>
+</html>
